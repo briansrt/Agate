@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Anuncio;
+use App\Models\Campaña;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
-use App\Models\TiposAnuncio;
+use App\Models\Contacto;
 
-class AnuncioController extends Controller
+class CampañaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $datos['anuncios']=Anuncio::paginate(5);
-        return view('anuncio.index', $datos);
+        $datos['campañas']=Campaña::paginate(5);
+        return view('campaña.index', $datos);
     }
 
     /**
@@ -25,8 +25,8 @@ class AnuncioController extends Controller
     public function create()
     {
         $clientes = Cliente::all();
-        $tiposanuncios = TiposAnuncio::all();
-        return view('anuncio.create', compact('clientes', 'tiposanuncios'));
+        $contactos = Contacto::all();
+        return view('campaña.create', compact('clientes', 'contactos'));
     }
 
     /**
@@ -36,12 +36,11 @@ class AnuncioController extends Controller
     {
         $campos=[
             'codigocliente' => 'required|exists:clientes,codigocliente',
-            'codigocampana' => 'required|exists:campañas,codigocampana',
-            'codigotiposanuncio' => 'required|exists:tipos_anuncios,codigotiposanuncio',
+            'codigocontacto' => 'required|exists:contactos,codigocontacto',
             'descripcion'=> 'required|string|max:100',
+            'presupuesto'=> 'required|integer',
             'fechainicio'=> 'required|date',
             'fechafin'=> 'required|date',
-            'valor'=> 'required|integer',
         ];
         $mensaje =[
             'required'=>'El :attribute es requerido',
@@ -51,15 +50,15 @@ class AnuncioController extends Controller
         ];
         $this->validate($request, $campos, $mensaje);
 
-        $datosAnuncio = request()->except('_token');
-        Anuncio::insert($datosAnuncio);
-        return redirect('anuncio')->with('mensaje','Anuncio Agregado con éxito');
+        $datosCampaña = request()->except('_token');
+        Campaña::insert($datosCampaña);
+        return redirect('campaña')->with('mensaje','Campaña Agregado con éxito');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Anuncio $anuncio)
+    public function show(RegistroPago $registroPago)
     {
         //
     }
@@ -67,27 +66,26 @@ class AnuncioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($codigoanuncio)
+    public function edit($codigocampana)
     {
-        $anuncio = Anuncio::findOrFail($codigoanuncio);
+        $campaña = Campaña::findOrFail($codigocampana);
         $clientes = Cliente::all();
-        $tiposanuncios = TiposAnuncio::all();
-        return view('anuncio.edit', compact('campaña', 'clientes', 'tiposanuncios'));
+        $contactos = Contacto::all();
+        return view('campaña.edit', compact('campaña', 'clientes', 'contactos'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $codigoanuncio)
+    public function update(Request $request, $codigocampana)
     {
         $campos=[
             'codigocliente' => 'required|exists:clientes,codigocliente',
-            'codigocampana' => 'required|exists:campañas,codigocampana',
-            'codigotiposanuncio' => 'required|exists:tiposanuncios,codigotiposanuncio',
+            'codigocontacto' => 'required|exists:contactos,codigocontacto',
             'descripcion'=> 'required|string|max:100',
+            'presupuesto'=> 'required|integer',
             'fechainicio'=> 'required|date',
             'fechafin'=> 'required|date',
-            'valor'=> 'required|integer',
         ];
         $mensaje =[
             'required'=>'El :attribute es requerido',
@@ -97,19 +95,26 @@ class AnuncioController extends Controller
         ];
         $this->validate($request, $campos, $mensaje);
 
-        $datosAnuncio = request()->except(['_token', '_method']);
-        Anuncio::where('codigoanuncio', '=', $codigoanuncio)-> update($datosAnuncio);
+        $datosCampaña = request()->except(['_token', '_method']);
+        Campaña::where('codigocampana', '=', $codigocampana)-> update($datosCampaña);
 
-        $anuncio = Anuncio::findOrFail($codigoanuncio);
-        return redirect('anuncio')->with('mensaje','Anuncio Actualizado Correctamente');
+        $campaña = Campaña::findOrFail($codigocampana);
+        return redirect('campaña')->with('mensaje','Campaña Actualizado Correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($codigoanuncio)
+    public function destroy($codigocampana)
     {
-        Anuncio::destroy($codigoanuncio);
-        return redirect('anuncio')->with('mensaje','Anuncio Borrado');
+        Campaña::destroy($codigocampana);
+        return redirect('campaña')->with('mensaje','Campaña Borrado');
     }
+
+    public function CampañaPorCliente($codigocliente)
+    {
+        $campañas = Campaña::where('codigocliente', $codigocliente)->get();
+        return response()->json($campañas);
+    }
+
 }

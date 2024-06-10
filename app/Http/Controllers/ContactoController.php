@@ -13,7 +13,8 @@ class ContactoController extends Controller
      */
     public function index()
     {
-        //
+        $datos['contactos']=Contacto::paginate(5);
+        return view('contacto.index', $datos);
     }
 
     /**
@@ -21,7 +22,7 @@ class ContactoController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacto.create');
     }
 
     /**
@@ -29,7 +30,22 @@ class ContactoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $campos=[
+            'nombre'=> 'required|string|max:100',
+            'apellido'=> 'required|string|max:100',
+            'direccion'=> 'required|string|max:100',
+            'celular'=> 'required|string|max:100',
+        ];
+        $mensaje =[
+            'required'=>'El :attribute es requerido',
+            'direccion.required'=> 'La direccion es requerida'
+            
+        ];
+        $this->validate($request, $campos, $mensaje);
+
+        $datosContacto = request()->except('_token');
+        Contacto::insert($datosContacto);
+        return redirect('contacto')->with('mensaje','Contacto Agregado con éxito');
     }
 
     /**
@@ -43,24 +59,43 @@ class ContactoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Contacto $contacto)
+    public function edit($codigocontacto)
     {
-        //
+        $contacto = Contacto::findOrFail($codigocontacto);
+        return view('contacto.edit', compact('contacto'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Contacto $contacto)
+    public function update(Request $request, $codigocontacto)
     {
-        //
+        $campos=[
+            'nombre'=> 'required|string|max:100',
+            'apellido'=> 'required|string|max:100',
+            'direccion'=> 'required|string|max:100',
+            'celular'=> 'required|string|max:100',
+        ];
+        $mensaje =[
+            'required'=>'El :attribute es requerido',
+            'direccion.required'=> 'La direccion es requerida'
+            
+        ];
+        $this->validate($request, $campos, $mensaje);
+
+        $datosContacto = request()->except(['_token', '_method']);
+        Contacto::where('codigocontacto', '=', $codigocontacto)-> update($datosContacto);
+
+        $contacto = Contacto::findOrFail($codigocontacto);
+        return redirect('contacto')->with('mensaje','Contacto Actualizado Correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Contacto $contacto)
+    public function destroy($codigocontacto)
     {
-        //
+        Contacto::destroy($codigocontacto);
+        return redirect('contacto')->with('mensaje','Contacto Borrado');
     }
 }
