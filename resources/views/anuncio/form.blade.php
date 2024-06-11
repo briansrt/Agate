@@ -24,6 +24,13 @@
         <label class="form-label" for="codigocampana">Campaña:</label>
         <select name="codigocampana" id="codigocampana">
             <option value="">Seleccione un Cliente</option>
+            @if(old('codigocliente') || (isset($anuncio) && $anuncio->codigocliente))
+                @foreach($campañas as $campaña)
+                    @if($campaña->codigocliente == old('codigocliente') || (isset($anuncio) && $campaña->codigocliente == $anuncio->codigocliente))
+                        <option value="{{ $campaña->codigocampana }}" {{ (old('codigocampana') == $campaña->codigocampana || (isset($anuncio) && $anuncio->codigocampana == $campaña->codigocampana)) ? 'selected' : '' }}> {{$campaña->descripcion}}</option>
+                    @endif
+                @endforeach
+            @endif
         </select>
     </div>
     <div class="d-flex flex-column w-100">
@@ -37,19 +44,19 @@
     </div>
     <div class="d-flex flex-column w-100">
         <label class="form-label" for="descripcion">Descripcion</label>
-        <input class="form-input" type="text" name="descripcion" id="descripcion" value="{{ isset($campaña->descripcion)?$campaña->descripcion:old('descripcion') }}">
+        <input class="form-input" type="text" name="descripcion" id="descripcion" value="{{ isset($anuncio->descripcion)?$anuncio->descripcion:old('descripcion') }}">
     </div>
     <div class="d-flex flex-column w-100">
         <label class="form-label" for="fechainicio">Fecha Inicio</label>
-        <input class="form-input" type="date" name="fechainicio" id="fechainicio" value="{{ isset($campaña->fechainicio)?$campaña->fechainicio:old('fechainicio') }}">
+        <input class="form-input" type="date" name="fechainicio" id="fechainicio" value="{{ isset($anuncio->fechainicio)?$anuncio->fechainicio:old('fechainicio') }}">
     </div>
     <div class="d-flex flex-column w-100">
         <label class="form-label" for="fechafin">Fecha Fin</label>
-        <input class="form-input" type="date" name="fechafin" id="fechafin" value="{{ isset($campaña->fechafin)?$campaña->fechafin:old('fechafin') }}">
+        <input class="form-input" type="date" name="fechafin" id="fechafin" value="{{ isset($anuncio->fechafin)?$anuncio->fechafin:old('fechafin') }}">
     </div>
     <div class="d-flex flex-column w-100">
         <label class="form-label" for="valor">Valor</label>
-        <input class="form-input" type="text" name="valor" id="valor" value="{{ isset($campaña->presupuesto)?$campaña->presupuesto:old('presupuesto') }}">
+        <input class="form-input" type="text" name="valor" id="valor" value="{{ isset($anuncio->valor)?$anuncio->valor:old('valor') }}">
     </div>
     <div class="mt-5">
         <input class="btn btn-success" type="submit" value="{{$modo}} datos">
@@ -73,6 +80,8 @@
                         $.each(data, function(key, value) {
                             $('#codigocampana').append('<option value="' + value.codigocampana + '">' + value.descripcion + '</option>');
                         });
+                        var CampañaSeleccionada = "{{ old('codigocampana', isset($anuncio) ? $anuncio->codigocampana : '') }}";
+                            $('#codigocampana').val(CampañaSeleccionada);
                     }
                 });
             } else {
@@ -80,5 +89,9 @@
                 $('#codigocampana').append('<option value="">Seleccione un Cliente</option>');
             }
         });
+        var clienteSeleccionado = "{{ old('codigocliente', isset($anuncio) ? $anuncio->codigocliente : '') }}";
+            if (clienteSeleccionado) {
+                $('#codigocliente').val(clienteSeleccionado).trigger('change');
+            }
     });
 </script>

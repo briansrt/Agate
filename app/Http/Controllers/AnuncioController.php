@@ -6,6 +6,7 @@ use App\Models\Anuncio;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Campaña;
 use App\Models\TiposAnuncio;
 
 class AnuncioController extends Controller
@@ -25,8 +26,9 @@ class AnuncioController extends Controller
     public function create()
     {
         $clientes = Cliente::all();
+        $campañas = Campaña::all();
         $tiposanuncios = TiposAnuncio::all();
-        return view('anuncio.create', compact('clientes', 'tiposanuncios'));
+        return view('anuncio.create', compact('clientes', 'campañas', 'tiposanuncios'));
     }
 
     /**
@@ -71,8 +73,9 @@ class AnuncioController extends Controller
     {
         $anuncio = Anuncio::findOrFail($codigoanuncio);
         $clientes = Cliente::all();
+        $campañas = Campaña::where('codigocliente', $anuncio->codigocliente)->get();
         $tiposanuncios = TiposAnuncio::all();
-        return view('anuncio.edit', compact('campaña', 'clientes', 'tiposanuncios'));
+        return view('anuncio.edit', compact('anuncio', 'clientes', 'campañas', 'tiposanuncios'));
     }
 
     /**
@@ -83,7 +86,7 @@ class AnuncioController extends Controller
         $campos=[
             'codigocliente' => 'required|exists:clientes,codigocliente',
             'codigocampana' => 'required|exists:campañas,codigocampana',
-            'codigotiposanuncio' => 'required|exists:tiposanuncios,codigotiposanuncio',
+            'codigotiposanuncio' => 'required|exists:tipos_anuncios,codigotiposanuncio',
             'descripcion'=> 'required|string|max:100',
             'fechainicio'=> 'required|date',
             'fechafin'=> 'required|date',
@@ -111,5 +114,11 @@ class AnuncioController extends Controller
     {
         Anuncio::destroy($codigoanuncio);
         return redirect('anuncio')->with('mensaje','Anuncio Borrado');
+    }
+
+    public function AnuncioPorCampaña($codigocampana)
+    {
+        $anuncios = Anuncio::where('codigocampana', $codigocampana)->get();
+        return response()->json($anuncios);
     }
 }

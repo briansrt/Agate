@@ -11,7 +11,7 @@
         </div>
     @endif
     <div>
-        <a class="btn btn-success" href="{{ url('anuncio/create') }}">Registrar Nuevo Anuncio</a>
+        <a class="btn btn-success" href="{{ url('adicionarpersonal/create') }}">Adicionar Personal a Campaña</a>
     </div>
     <br>
     <br>
@@ -21,28 +21,22 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Tipo Anuncio</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Fecha Inicio</th>
-                <th scope="col">Fecha Fin</th>
-                <th scope="col">Valor</th>
+                <th scope="col">Campaña</th>
+                <th scope="col">Contacto</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($anuncios as $anuncio)
+            @foreach ($adicionarpersonals as $adicionarpersonal)
                 <tr>
-                    <td>{{ $anuncio->codigoanuncio }}</td>
-                    <td>{{ $anuncio->codigocliente }}</td>
-                    <td>{{ $anuncio->codigotiposanuncio }}</td>
-                    <td>{{ $anuncio->descripcion }}</td>
-                    <td>{{ $anuncio->fechainicio }}</td>
-                    <td>{{ $anuncio->fechafin }}</td>
-                    <td>{{ $anuncio->valor }}</td>
+                    <td>{{ $adicionarpersonal->codigoadicionarpersonal }}</td>
+                    <td>{{ $adicionarpersonal->codigocliente }}</td>
+                    <td>{{ $adicionarpersonal->codigocampana }}</td>
+                    <td>{{ $adicionarpersonal->codigocontacto }}</td>
                     <td>
-                        <a href="{{ url('/anuncio/'.  $anuncio->codigoanuncio .'/edit') }}" class="btn btn-warning">Editar</a>
+                        <a href="{{ url('/adicionarpersonal/'.  $adicionarpersonal->codigoadicionarpersonal .'/edit') }}" class="btn btn-warning">Editar</a>
     
-                        <form action="{{ url('/anuncio/'.$anuncio->codigoanuncio) }}" method="post" class="d-inline">
+                        <form action="{{ url('/adicionarpersonal/'.$adicionarpersonal->codigoadicionarpersonal) }}" method="post" class="d-inline">
                             @csrf
                             {{ method_field('DELETE') }}
                             <input class="btn btn-danger" type="submit" onclick="return confirm('¿Seguro que quieres borrarlo?')" value="Borrar">
@@ -52,7 +46,7 @@
             @endforeach
         </tbody>
     </table>
-    {!! $anuncios -> links() !!}
+    {!! $adicionarpersonals -> links() !!}
 </div>
 </div>
 @endsection

@@ -11,7 +11,7 @@
         </div>
     @endif
     <div>
-        <a class="btn btn-success" href="{{ url('anuncio/create') }}">Registrar Nuevo Anuncio</a>
+        <a class="btn btn-success" href="{{ url('adicionarnota/create') }}">Añadir Nota a Anuncio</a>
     </div>
     <br>
     <br>
@@ -21,28 +21,26 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Tipo Anuncio</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Fecha Inicio</th>
-                <th scope="col">Fecha Fin</th>
-                <th scope="col">Valor</th>
+                <th scope="col">Campaña</th>
+                <th scope="col">Anuncio</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Nota</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($anuncios as $anuncio)
+            @foreach ($adicionarnotas as $adicionarnota)
                 <tr>
-                    <td>{{ $anuncio->codigoanuncio }}</td>
-                    <td>{{ $anuncio->codigocliente }}</td>
-                    <td>{{ $anuncio->codigotiposanuncio }}</td>
-                    <td>{{ $anuncio->descripcion }}</td>
-                    <td>{{ $anuncio->fechainicio }}</td>
-                    <td>{{ $anuncio->fechafin }}</td>
-                    <td>{{ $anuncio->valor }}</td>
+                    <td>{{ $adicionarnota->codigoadicionarnotas }}</td>
+                    <td>{{ $adicionarnota->codigocliente }}</td>
+                    <td>{{ $adicionarnota->codigocampana }}</td>
+                    <td>{{ $adicionarnota->codigoanuncio }}</td>
+                    <td>{{ $adicionarnota->fecha }}</td>
+                    <td>{{ $adicionarnota->nota }}</td>
                     <td>
-                        <a href="{{ url('/anuncio/'.  $anuncio->codigoanuncio .'/edit') }}" class="btn btn-warning">Editar</a>
+                        <a href="{{ url('/adicionarnota/'.  $adicionarnota->codigoadicionarnotas .'/edit') }}" class="btn btn-warning">Editar</a>
     
-                        <form action="{{ url('/anuncio/'.$anuncio->codigoanuncio) }}" method="post" class="d-inline">
+                        <form action="{{ url('/adicionarnota/'.$adicionarnota->codigoadicionarnotas) }}" method="post" class="d-inline">
                             @csrf
                             {{ method_field('DELETE') }}
                             <input class="btn btn-danger" type="submit" onclick="return confirm('¿Seguro que quieres borrarlo?')" value="Borrar">
@@ -52,7 +50,7 @@
             @endforeach
         </tbody>
     </table>
-    {!! $anuncios -> links() !!}
+    {!! $adicionarnotas -> links() !!}
 </div>
 </div>
 @endsection

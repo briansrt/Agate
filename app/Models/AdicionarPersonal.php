@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AdicionarPersonal extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'codigoadicionarpersonal';
+    public $incrementing = true; // Pon esto en true si es autoincremental
+    protected $keyType = 'int'; // Cambia a 'string' si no es un entero
 }
